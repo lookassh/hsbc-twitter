@@ -1,0 +1,45 @@
+### Add post 1
+POST http://localhost:8080/api/v1/posts
+Authorization: Basic admin admin
+Content-Type: application/json
+
+{
+"title": "Post 1",
+"body": "Sunday is the day of the week between Saturday and Monday. Sunday is a day of rest in most Western countries, and a part of the weekend. In some Eastern countries such as Israel Sunday is a weekday."
+}
+
+### Add post 2
+POST http://localhost:8080/api/v1/posts
+Authorization: Basic admin admin
+Content-Type: application/json
+
+{
+  "title": "Post 2",
+  "body": "body 2"
+}
+
+### Add post 3
+POST http://localhost:8080/api/v1/posts
+Authorization: Basic alice 123456
+Content-Type: application/json
+
+{
+  "title": "Post 3",
+  "body": "body 3"
+}
+
+### Follow
+POST http://localhost:8080/api/v1/follow/alice
+Authorization: Basic admin admin
+
+### Display wall
+GET http://localhost:8080/api/v1/wall
+Authorization: Basic admin admin
+
+### Display timeline
+GET http://localhost:8080/api/v1/timeline
+Authorization: Basic admin admin
+
+### Display timeline
+GET http://localhost:8080/api/v1/timeline
+Authorization: Basic alice 123456

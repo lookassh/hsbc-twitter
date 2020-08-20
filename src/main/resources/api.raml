@@ -1,0 +1,144 @@
+#%RAML 1.0
+title: Social App REST Services API
+version: v1
+protocols: [ HTTPS ]
+baseUri: /api/v1
+mediaType: application/json
+securedBy: basicAuth
+securitySchemes:
+  basicAuth:
+    description: Each request must contain the headers necessary for basic authentication
+    type: Basic Authentication
+    describedBy:
+      headers:
+        Authorization:
+          description: Used to send the Base64 encoded "username:password" credentials
+          type: string
+      responses:
+        401:
+          description: |
+            Unauthorized. Either the provided username and password
+            combination is invalid, or the user is not allowed to access
+            the content provided by the requested URL.
+types:
+  Post:
+    type: object
+    example: |
+      {
+            "id": 1,
+            "createdBy": "admin",
+            "createdAt": "2020-08-18T14:06:10.938747Z",
+            "title": "New Year",
+            "body": "Happy New Year Wishes"
+      }
+    properties:
+      id:
+        type: integer
+      createdBy:
+        type: string
+      createdAt:
+        type: datetime
+      title:
+        type: string
+      body:
+        type: string
+  NewPost:
+    type: object
+    example: |
+      {
+        "title" : "Hello",
+        "body" : "Today is Sunday"
+      }
+    properties:
+      title:
+        type: string
+        maxLength: 30
+      body:
+        type: string
+        maxLength: 140
+  PageInfo:
+    type: object
+    properties:
+      page: integer
+      size: integer
+      total: integer
+  PostResponse:
+    type: object
+    example: |
+      {
+        "data":[
+          {
+                "id": 1,
+                "createdBy": "alice",
+                "createdAt": "2020-08-18T14:06:10.938747Z",
+                "title": "New Year",
+                "body": "Happy New Year Wishes"
+          },
+          {
+                "id": 2,
+                "createdBy": "alice",
+                "createdAt": "2020-08-19T14:06:10.938747Z",
+                "title": "My first post",
+                "body": "First post body"
+          }
+        ],
+        "pageInfo":{
+          "page": 0,
+          "size": 20,
+          "total": 2
+        }
+      }
+    properties:
+      data: Post[]
+      pageInfo: PageInfo
+
+/wall:
+  get:
+    description: List of the user posts, in reverse chronological order.
+    queryParameters:
+      page?:
+        default: 0
+        type: integer
+      size?:
+        default: 50
+        type: integer
+    responses:
+      200:
+        body:
+          application/json:
+            type: PostResponse
+
+/timeline:
+  get:
+    description: List of the posts posted by all the people user follow, in reverse chronological order..
+    queryParameters:
+      page?:
+        default: 0
+        type: integer
+      size?:
+        default: 50
+        type: integer
+    responses:
+      200:
+        body:
+          application/json:
+            type: PostResponse
+/posts:
+  post:
+    description: Create a new Post
+    body:
+      application/json:
+        type: NewPost
+    responses:
+      201:
+        body:
+          application/json:
+            type: Post
+
+/follow:
+  /{username}:
+    post:
+      description: Follow user
+      responses:
+        200:
+          description: Following has been created
